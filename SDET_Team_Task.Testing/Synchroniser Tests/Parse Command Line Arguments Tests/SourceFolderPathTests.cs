@@ -45,6 +45,7 @@ internal class SourceFolderPathTests
 	[TestCase(new string[] {"s", "C:\\test"}, typeof(ArgumentException))]
 	[TestCase(new string[] {"S", "C:\\test"}, typeof(ArgumentException))]
 	[TestCase(new string[] {" ", "C:\\test"}, typeof(ArgumentException))]
+	[TestCase(new string[] { "-s", "C:\\test", "-r", "C:\\test" }, typeof(Exception))]
 	public void InvalidPathTest(string[] args, Type expectedExceptionType)
 	{
 		Assert.Throws(expectedExceptionType, () => ParseCommandLineArguments(args));
