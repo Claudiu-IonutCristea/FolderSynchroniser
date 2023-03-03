@@ -34,7 +34,7 @@ internal static class ArgumentParser
             {
                 #region Source Folder
                 case "-S":
-                    var sourceFolder = ParsePath(args[i + 1].Trim('\"'));
+                    var sourceFolder = ParsePath(args[i + 1]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
@@ -51,7 +51,7 @@ internal static class ArgumentParser
 
                 #region Replica Folder
                 case "-R":
-                    var replicaFolder = ParsePath(args[i + 1].Trim('\"'));
+                    var replicaFolder = ParsePath(args[i + 1]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
@@ -79,7 +79,7 @@ internal static class ArgumentParser
 
                 #region Log File Path
                 case "-L":
-                    var path = ParsePath(args[i + 1].Trim('\"'));
+                    var path = ParsePath(args[i + 1]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
