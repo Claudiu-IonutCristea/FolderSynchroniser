@@ -20,7 +20,7 @@ internal static class ArgumentParser
             return programArgs;
         }
 
-        for (int i = 0; i < args.Length; i += 2)
+        for (int i = 0; i < args.Length; i++)
         {
             if (!args[i].StartsWith('-'))
             {
@@ -34,7 +34,8 @@ internal static class ArgumentParser
             {
                 #region Source Folder
                 case "-S":
-                    var sourceFolder = ParsePath(args[i + 1]);
+					i++;
+                    var sourceFolder = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
@@ -51,7 +52,8 @@ internal static class ArgumentParser
 
                 #region Replica Folder
                 case "-R":
-                    var replicaFolder = ParsePath(args[i + 1]);
+					i++;
+                    var replicaFolder = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
@@ -68,7 +70,8 @@ internal static class ArgumentParser
 
                 #region Sync Period
                 case "-I":
-                    var syncTs = ParseSyncPeriod(args[i + 1]);
+					i++;
+                    var syncTs = ParseSyncPeriod(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.SyncPeriod))
                         break;
 
@@ -79,7 +82,8 @@ internal static class ArgumentParser
 
                 #region Log File Path
                 case "-L":
-                    var path = ParsePath(args[i + 1]);
+					i++;
+                    var path = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
@@ -98,7 +102,7 @@ internal static class ArgumentParser
                     }
 
                     //if there is no extension that means path ends with directory name
-                    programArgs.LogFilePath = path + (path.EndsWith('\\') ? "log.txt" : "\\log.txt");
+                    programArgs.LogFilePath = path + (Path.EndsInDirectorySeparator(path) ? "log.txt" : "\\log.txt");
                     break;
                 #endregion
 
@@ -110,13 +114,23 @@ internal static class ArgumentParser
 
                 default:
                     ErrorsManager.Add(303, args[i]);
-                    break;
+                    return null;
             }
         }
 
         return programArgs;
     }
 
+	/// <summary>
+	/// Parses a given path into a valid ABSOLUTE path
+	/// </summary>
+	/// <param name="path">Path to parse</param>
+	/// <returns>
+	/// An absolute path <seealso cref="string"/><br/>
+	/// <br/><br/>
+	/// If path is not valid returns an empty path and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/>
+	/// <see cref="ErrorCategory.PathValidation"/>
+	/// </returns>
     public static string ParsePath(string path)
     {
         var result = Path.GetFullPath(path);
@@ -128,7 +142,22 @@ internal static class ArgumentParser
 
         return result;
     }
-    public static TimeSpan ParseSyncPeriod(string syncPeriod)
+
+	/// <summary>
+	/// Converts a <see cref="string"/> with a special format into a <see cref="TimeSpan"/> meant to be used for the syncPeriod
+	/// </summary>
+	/// <remarks>
+	/// See documentation for string format and examples.<br/>
+	/// <see href="https://github.com/Claudiu-IonutCristea/SDET_Team_Task"/>
+	/// </remarks>
+	/// <param name="syncPeriod">formatted <see cref="string"/></param>
+	/// <returns>
+	/// <see cref="TimeSpan"/> based on the <paramref name="syncPeriod"/><br/>
+	/// <br/><br/>
+	/// If path is not valid returns a new <see cref="TimeSpan"/>(0, 0, -1) and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/>
+	/// <see cref="ErrorCategory.SyncPeriod"/>
+	/// </returns>
+	public static TimeSpan ParseSyncPeriod(string syncPeriod)
     {
         var formats = new string[] { @"s\s", @"m\m", @"h\h", @"h\hm\m", @"h\hs\s", @"m\ms\s", @"h\hm\ms\s",
             @"d\d", @"d\dh\h", @"d\dm\m", @"d\ds\s", @"d\dh\hm\m", @"d\dh\hs\s", @"d\dm\ms\s", @"d\dh\hm\ms\s"
@@ -145,7 +174,9 @@ internal static class ArgumentParser
 
     private static bool IsPathValid(string path)
     {
-        // Check if the path is rooted in a drive
+        //Check if the path is rooted in a drive
+		//Redundant check in this case
+		//	Path.GetFullPath() will always make a path that is at least 3 chars long or will throw Exception
         if (path.Length < 3)
         {
             ErrorsManager.Add(101, path);
@@ -158,7 +189,7 @@ internal static class ArgumentParser
             return false;
         }
 
-        // Check if drive exists
+        //Check if drive exists
         IEnumerable<string> allMachineDrivers = DriveInfo.GetDrives().Select(drive => drive.Name);
         if (!allMachineDrivers.Contains(path[..3]))
         {
@@ -166,7 +197,7 @@ internal static class ArgumentParser
             return false;
         }
 
-        // Check if the rest of the path is valid
+        //Check if the rest of the path is valid
         var invalidFileNameChars = new string(Path.GetInvalidPathChars());
         invalidFileNameChars += @":/?*><" + "\"";
         var containsABadCharacter = new Regex("[" + Regex.Escape(invalidFileNameChars) + "]");
