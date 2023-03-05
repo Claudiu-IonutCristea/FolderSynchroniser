@@ -1,13 +1,9 @@
-﻿{
-	"101": "The length of path # is invalid!",
-	"102": "Drive letter # is invalid!",
-	"103": "Drive # does not exist on this device!",
-	"104": "Path # contains an invalid character!",
-
-	"201": "Sync period invalid format!",
-
-	"301": "Invalid command line argument format! (#) Commands have to start with \"-\"",
-	"302": "Source folder and Replica folder cannot be the same!",
-	"303": "Command # not recognised!",
-	"304": "Extension # is not supported for the log file. use \".txt\" instead"
-}
+﻿[{ "id": 101, "message": "The length of path # is invalid!" },
+{ "id": 102, "message": "Drive letter # is invalid!" },
+{ "id": 103, "message": "Drive # does not exist on this device!" },
+{ "id": 104, "message": "Path # contains an invalid character!"},
+{ "id": 201, "message": "Sync period invalid format!" },
+{ "id": 301, "message": "Invalid command line argument format! (#) Commands have to start with \"-\"" },
+{ "id": 302, "message": "Source folder and Replica folder cannot be the same!" },
+{ "id": 303, "message": "Command # not recognised!" },
+{ "id": 304, "message": "Extension # is not supported for the log file. use \".txt\" instead" }]
