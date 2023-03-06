@@ -9,7 +9,22 @@ using SDET_Team_Task.FolderSync.ErrorHandling;
 namespace SDET_Team_Task.FolderSync.CLIArguments;
 internal static class ArgumentParser
 {
-    public static Settings? Parse(string[] args)
+	/// <summary>
+	/// Parses CLI Arguments and returns new <see cref="Settings"/> object
+	/// </summary>
+	/// <remarks>
+	///	If <see cref="string"/>[] <paramref name="args"/> is empty, returns <see cref="Settings"/> with default values
+	/// </remarks>
+	/// <param name="args"></param>
+	/// <returns>
+	/// new <see cref="Settings"/> object
+	/// <br/><br/>
+	/// If any of the arguments are not valid, returns <see langword="null"/> and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/><br/>
+	/// <see cref="ErrorCategory.ArgumentsParsing"/><br/>
+	/// <see cref="ErrorCategory.PathValidation"/><br/>
+	/// <see cref="ErrorCategory.SyncPeriod"/>
+	/// </returns>
+	public static Settings? Parse(string[] args)
     {
         var programArgs = new Settings();
 
@@ -34,6 +49,7 @@ internal static class ArgumentParser
             {
                 #region Source Folder
                 case "-S":
+				case "-SOURCE":
 					i++;
                     var sourceFolder = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
@@ -52,6 +68,7 @@ internal static class ArgumentParser
 
                 #region Replica Folder
                 case "-R":
+				case "-REPLICA":
 					i++;
                     var replicaFolder = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
@@ -70,6 +87,7 @@ internal static class ArgumentParser
 
                 #region Sync Period
                 case "-I":
+				case "-SYNC":
 					i++;
                     var syncTs = ParseSyncPeriod(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.SyncPeriod))
@@ -82,12 +100,13 @@ internal static class ArgumentParser
 
                 #region Log File Path
                 case "-L":
+				case "-LOG":
 					i++;
                     var path = ParsePath(args[i]);
                     if (ErrorsManager.HasErrorFromCategory(ErrorCategory.PathValidation))
                         break;
 
-                    var extension = Path.GetExtension(path);
+                    var extension = Path.GetExtension(path).ToLower();
 
                     if (!string.IsNullOrEmpty(extension))
                     {
@@ -108,6 +127,7 @@ internal static class ArgumentParser
 
                 #region Log Tree View
                 case "-T":
+				case "-TREE":
                     programArgs.LogTreeView = true;
                     break;
                 #endregion
@@ -117,6 +137,9 @@ internal static class ArgumentParser
                     return null;
             }
         }
+
+		if(ErrorsManager.HasErrors)
+			return null;
 
         return programArgs;
     }
@@ -128,7 +151,7 @@ internal static class ArgumentParser
 	/// <returns>
 	/// An absolute path <seealso cref="string"/><br/>
 	/// <br/><br/>
-	/// If path is not valid returns an empty path and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/>
+	/// If path is not valid returns an empty path and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/><br/>
 	/// <see cref="ErrorCategory.PathValidation"/>
 	/// </returns>
     public static string ParsePath(string path)
@@ -154,7 +177,7 @@ internal static class ArgumentParser
 	/// <returns>
 	/// <see cref="TimeSpan"/> based on the <paramref name="syncPeriod"/><br/>
 	/// <br/><br/>
-	/// If path is not valid returns a new <see cref="TimeSpan"/>(0, 0, -1) and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/>
+	/// If path is not valid returns a new <see cref="TimeSpan"/>(0, 0, -1) and adds the <see cref="Error"/> to the <see cref="ErrorsManager"/><br/>
 	/// <see cref="ErrorCategory.SyncPeriod"/>
 	/// </returns>
 	public static TimeSpan ParseSyncPeriod(string syncPeriod)
