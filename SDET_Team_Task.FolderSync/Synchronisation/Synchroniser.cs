@@ -1,4 +1,6 @@
 ﻿using SDET_Team_Task.FolderSync.CLIArguments;
+using SDET_Team_Task.FolderSync.DataLogger;
+using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,8 +55,15 @@ internal static class Synchroniser
 		return result;
 	}
 
-	public static void Synchronise(Settings settings, Dictionary<string, SyncActionTypes> syncActions)
+	public static async Task SynchroniseAsync(Settings settings, Dictionary<string, SyncActionTypes> syncActions, Logger logger)
 	{
+		await logger.WriteLineAsync($"Started synchronisation at [{DateTime.Now:yyyy/MM/dd-HH:mm:ss}]");
+		await logger.WriteSettingsAsync(settings);
+		await logger.WriteLineAsync();
+
+		var sw = new Stopwatch();
+		sw.Start();
+
 		foreach(var pair in syncActions)
 		{
 			var relativePath = pair.Key;
@@ -89,7 +98,30 @@ internal static class Synchroniser
 				default:
 					throw new NotImplementedException("SyncActionType not supported!");
 			}
+
 		}
+
+		sw.Stop();
+
+		var deletedFiles = syncActions.Where(x => x.Value == SyncActionTypes.Delete).Select(x => x.Key);
+		var replacedFiles = syncActions.Where(x => x.Value == SyncActionTypes.Replace).Select(x => x.Key);
+		var newFiles = syncActions.Where(x => x.Value == SyncActionTypes.Copy).Select(x => x.Key);
+
+		await logger.WriteLineAsync($"----- DELETED FILES ({deletedFiles.Count()}) -----");
+		await logger.WriteModifiedFilesAsync(deletedFiles);
+		await logger.WriteLineAsync();
+
+		await logger.WriteLineAsync($"----- REPLACED FILES ({replacedFiles.Count()}) -----");
+		await logger.WriteModifiedFilesAsync(replacedFiles);
+		await logger.WriteLineAsync();
+
+		await logger.WriteLineAsync($"----- NEW FILES ({newFiles.Count()}) -----");
+		await logger.WriteModifiedFilesAsync(newFiles);
+		await logger.WriteLineAsync();
+
+		await logger.WriteLineAsync();
+		await logger.WriteLineAsync($"Synchronisation finished in {sw.ElapsedMilliseconds} ms");
+		await logger.WriteLineAsync($"Next synchronisation at [{DateTime.Now + TimeSpan.FromMilliseconds(settings.SyncPeriodMs):yyyy/MM/dd-HH:mm:ss}]");
 	}
 
 	private static bool IsDirectory(string path)
