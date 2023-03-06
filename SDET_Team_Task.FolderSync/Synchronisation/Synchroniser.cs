@@ -39,7 +39,7 @@ internal static class Synchroniser
 		//files to replace
 		foreach(var file in filesInBoth)
 		{
-			if(File.GetLastWriteTime(Path.Combine(settings.SourceFolderPath, file)) >
+			if(File.GetLastWriteTime(Path.Combine(settings.SourceFolderPath, file)) !=
 				File.GetLastWriteTime(Path.Combine(settings.ReplicaFolderPath, file)))
 			{
 				result.Add(file, SyncActionTypes.Replace);
@@ -64,7 +64,7 @@ internal static class Synchroniser
 		var sw = new Stopwatch();
 		sw.Start();
 
-		foreach(var pair in syncActions)
+		foreach(var pair in syncActions.OrderByDescending(x => x.Key))
 		{
 			var relativePath = pair.Key;
 			var syncAction = pair.Value;
@@ -122,6 +122,8 @@ internal static class Synchroniser
 		await logger.WriteLineAsync();
 		await logger.WriteLineAsync($"Synchronisation finished in {sw.ElapsedMilliseconds} ms");
 		await logger.WriteLineAsync($"Next synchronisation at [{DateTime.Now + TimeSpan.FromMilliseconds(settings.SyncPeriodMs):yyyy/MM/dd-HH:mm:ss}]");
+		await logger.WriteLineAsync();
+		await logger.WriteLineAsync();
 	}
 
 	private static bool IsDirectory(string path)
