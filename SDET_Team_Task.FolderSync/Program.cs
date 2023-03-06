@@ -1,22 +1,41 @@
 ﻿using SDET_Team_Task.FolderSync.CLIArguments;
+using SDET_Team_Task.FolderSync.DataLogger;
 using SDET_Team_Task.FolderSync.ErrorHandling;
 using SDET_Team_Task.FolderSync.Synchronisation;
+using System.Timers;
 
 namespace SDET_Team_Task.FolderSync
 {
 	internal class Program
 	{
-		static int Main(string[] args)
+		static async Task<int> Main(string[] args)
 		{
-			var timer = new System.Timers.Timer(2000);
+			var settings = ArgumentParser.Parse(args);
+			if(settings == null || ErrorsManager.HasErrors)
+			{
+				Console.Write(await ErrorsManager.WriteAllErrorsAsync());
+				return ErrorsManager.Errors.First().ErrorCode;
+			}
 
-			timer.Elapsed += Timer_Elapsed;
+			//Doesn't affect the directories if they already exist
+			Directory.CreateDirectory(settings.SourceFolderPath);
+			Directory.CreateDirectory(settings.ReplicaFolderPath);
+
+			var logger = new Logger(settings.LogFilePath);
+			var timer = new System.Timers.Timer(settings.SyncPeriodMs);
+
+			await SynchroniseFoldersAsync(settings, logger);
+
+			timer.Elapsed += async (sender, e) => await SynchroniseFoldersAsync(settings, logger);
 			timer.AutoReset = true;
 			timer.Enabled = true;
 
-			Console.WriteLine("\nPress the Enter key to exit the application...\n");
-			Console.WriteLine("The application started at {0:HH:mm:ss.fff}", DateTime.Now);
-			Console.ReadLine();
+			var consoleLine = "";
+			while(consoleLine != "quit" && consoleLine != "q")
+			{
+				consoleLine = Console.ReadLine();
+			}
+
 			timer.Stop();
 			timer.Dispose();
 
@@ -27,9 +46,16 @@ namespace SDET_Team_Task.FolderSync
 			return ErrorsManager.HasErrors ? ErrorsManager.Errors.First().ErrorCode : 0;
 		}
 
-		private static void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+		private static async Task SynchroniseFoldersAsync(Settings settings, Logger logger)
 		{
-			Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
+			var sourceFiles = Synchroniser.GetAllFilesAndDirectories(settings.SourceFolderPath);
+			var replicaFiles = Synchroniser.GetAllFilesAndDirectories(settings.ReplicaFolderPath);
+
+			var syncActions = Synchroniser.GetSyncActions(sourceFiles, replicaFiles, settings);
+
+			await Synchroniser.SynchroniseAsync(settings, syncActions, logger);
+
+			Console.WriteLine("Type \"quit\" or \"q\" to terminate the app");
 		}
 	}
 }
