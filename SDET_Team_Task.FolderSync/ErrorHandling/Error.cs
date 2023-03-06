@@ -8,5 +8,5 @@ namespace SDET_Team_Task.FolderSync.ErrorHandling;
 internal struct Error
 {
     public int ErrorCode { get; set; }
-    public string? ErrorSource { get; set; }
+    public string ErrorSource { get; set; }
 }
