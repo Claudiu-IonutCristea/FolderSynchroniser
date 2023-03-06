@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SDET_Team_Task.Testing.ErrorHandlingTests;
-internal class ErrorManagerTests : BaseTestSetup
+internal class ErrorManagerTests
 {
 	[TestCaseSource(nameof(WriteAllErrorsAsync_Data))]
 	public static async Task WriteAllErrorsAsync_Tests(Error[] errors, string expectedString)

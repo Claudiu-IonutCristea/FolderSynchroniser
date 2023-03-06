@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using static SDET_Team_Task.FolderSync.CLIArguments.ArgumentParser;
 
 namespace SDET_Team_Task.Testing.ArgumentParserTests;
-internal class ParsePathTests : BaseTestSetup
+internal class ParsePathTests
 {
 	[TestCase(@"C:\folder\replica", @"C:\folder\replica")]
 	[TestCase(@"C:\folder\replica folder", @"C:\folder\replica folder")]
@@ -52,5 +52,7 @@ internal class ParsePathTests : BaseTestSetup
 				ErrorSource = expectedErrorSource
 			}));
 		});
+
+		ErrorsManager.ClearAll();
 	}
 }

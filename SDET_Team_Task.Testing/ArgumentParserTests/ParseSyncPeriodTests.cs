@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using static SDET_Team_Task.FolderSync.CLIArguments.ArgumentParser;
 
 namespace SDET_Team_Task.Testing.ArgumentParserTests;
-internal class ParseSyncPeriodTests : BaseTestSetup
+internal class ParseSyncPeriodTests
 {
 	[TestCaseSource(nameof(ValidInput_Data))]
 	public static void ValidInput_Tests(string syncPeriod, TimeSpan expectedTs)
@@ -53,6 +53,8 @@ internal class ParseSyncPeriodTests : BaseTestSetup
 				ErrorSource = expectedErrorSource
 			}));
 		});
+
+		ErrorsManager.ClearAll();
 	}
 
 	public static object[] InvalidInput_Data =
