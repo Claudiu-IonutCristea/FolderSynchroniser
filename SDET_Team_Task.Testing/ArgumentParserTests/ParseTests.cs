@@ -105,24 +105,6 @@ internal class ParseTests : BaseTestSetup
 		{
 			new string[]
 			{
-				"-i", "1h",
-				"-t",
-				"-r", @"C:\replica",
-				"-l", @"C:\log.txt",
-				"-s", @"C:\source Folder",
-			},
-			new Settings
-			{
-				SourceFolderPath = @"C:\source Folder",
-				ReplicaFolderPath = @"C:\replica",
-				LogFilePath = @"C:\log.txt",
-				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds,
-			}
-		}, //-t in middle of args
-		new object[]
-		{
-			new string[]
-			{
 				"-r", @"replica",
 				"-l", @"./log.txt",
 			},
@@ -140,7 +122,6 @@ internal class ParseTests : BaseTestSetup
 				"-replica", @"C:\replica",
 				"-log", @"C:\log.txt",
 				"-sync", "1h",
-				"-tree"
 			},
 			new Settings
 			{

@@ -64,7 +64,7 @@ internal static class Synchroniser
 		var sw = new Stopwatch();
 		sw.Start();
 
-		foreach(var pair in syncActions.OrderByDescending(x => x.Key))
+		foreach(var pair in syncActions)
 		{
 			var relativePath = pair.Key;
 			var syncAction = pair.Value;
@@ -76,8 +76,8 @@ internal static class Synchroniser
 			{
 				case SyncActionTypes.Delete:
 					if(IsDirectory(replicaFullPath))
-						Directory.Delete(replicaFullPath);
-					else
+						Directory.Delete(replicaFullPath, true);
+					else if(File.Exists(replicaFullPath))
 						File.Delete(replicaFullPath);
 					break;
 
