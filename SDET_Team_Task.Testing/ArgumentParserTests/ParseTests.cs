@@ -38,7 +38,6 @@ internal class ParseTests : BaseTestSetup
 				ReplicaFolderPath = @"C:\replica",
 				LogFilePath = @"C:\log.txt",
 				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds,
-				LogTreeView = false,
 			}
 		},
 		new object[]
@@ -55,8 +54,7 @@ internal class ParseTests : BaseTestSetup
 				SourceFolderPath = @"C:\source Folder",
 				ReplicaFolderPath = @"C:\replica",
 				LogFilePath = @"C:\log.txt",
-				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds,
-				LogTreeView = false,
+				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds
 			}
 		}, //command order
 		new object[]
@@ -119,7 +117,6 @@ internal class ParseTests : BaseTestSetup
 				ReplicaFolderPath = @"C:\replica",
 				LogFilePath = @"C:\log.txt",
 				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds,
-				LogTreeView = true,
 			}
 		}, //-t in middle of args
 		new object[]
@@ -151,7 +148,6 @@ internal class ParseTests : BaseTestSetup
 				ReplicaFolderPath = @"C:\replica",
 				LogFilePath = @"C:\log.txt",
 				SyncPeriodMs = (int)new TimeSpan(1, 0, 0).TotalMilliseconds,
-				LogTreeView = true,
 			}
 		}, //full name commands
 		new object[]

@@ -125,13 +125,6 @@ internal static class ArgumentParser
                     break;
                 #endregion
 
-                #region Log Tree View
-                case "-T":
-				case "-TREE":
-                    programArgs.LogTreeView = true;
-                    break;
-                #endregion
-
                 default:
                     ErrorsManager.Add(303, args[i]);
                     return null;

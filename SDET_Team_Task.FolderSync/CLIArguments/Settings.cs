@@ -5,15 +5,13 @@ internal class Settings : IEquatable<Settings>
     public string ReplicaFolderPath { get; set; } = Directory.GetCurrentDirectory() + "\\replica";
     public string LogFilePath { get; set; } = Directory.GetCurrentDirectory() + "\\log.txt";
     public int SyncPeriodMs { get; set; } = 10_000; //10 seconds
-    public bool LogTreeView { get; set; } = false;
 
 	public bool Equals(Settings? other)
 		=> other != null &&
 		SourceFolderPath == other.SourceFolderPath &&
 		ReplicaFolderPath == other.ReplicaFolderPath &&
 		LogFilePath == other.LogFilePath &&
-		SyncPeriodMs == other.SyncPeriodMs &&
-		LogTreeView == other.LogTreeView;
+		SyncPeriodMs == other.SyncPeriodMs;
 
 	public override bool Equals(object? obj)
 		=> ReferenceEquals(obj, this) || Equals(obj as Settings);

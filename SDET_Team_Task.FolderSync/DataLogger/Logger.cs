@@ -48,7 +48,5 @@ internal class Logger
 		await WriteLineAsync($"Replica folder: {settings.ReplicaFolderPath}");
 		await WriteLineAsync($"Log file: {settings.LogFilePath}");
 		await WriteLineAsync($"Sync period: {TimeSpan.FromMilliseconds(settings.SyncPeriodMs):dd\\.hh\\:mm\\:ss}");
-		if(settings.LogTreeView)
-			await WriteLineAsync("Using tree view display");
 	}
 }
