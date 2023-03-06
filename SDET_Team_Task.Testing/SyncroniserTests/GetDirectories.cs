@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SDET_Team_Task.FolderSync.CLIArguments;
+using SDET_Team_Task.FolderSync.DataLogger;
 using SDET_Team_Task.FolderSync.Synchronisation;
 using static SDET_Team_Task.FolderSync.Synchronisation.Synchroniser;
 
@@ -50,11 +51,12 @@ internal class GetDirectories : BaseDirectoriesTestSetup
 	}
 
 	[Test]
-	public static void Synchronise_Test()
+	public static async Task Synchronise_Test()
 	{
 		var dictionary = GetSyncActions(sourceFiles, replicaFiles, settings);
+		var logger = new Logger(settings.LogFilePath);
 
-		Synchronise(settings, dictionary);
+		await SynchroniseAsync(settings, dictionary, logger);
 
 		var newReplicaFiles = GetAllFilesAndDirectories(fullPathReplica);
 
