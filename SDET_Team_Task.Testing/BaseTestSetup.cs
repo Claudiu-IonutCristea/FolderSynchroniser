@@ -8,9 +8,16 @@ using System.Threading.Tasks;
 namespace SDET_Team_Task.Testing;
 internal abstract class BaseTestSetup
 {
+	[SetUp]
+	public virtual void SetUp()
+	{
+
+	}
+
 	[TearDown]
-	public static void TearDown()
+	public virtual void TearDown()
 	{
 		ErrorsManager.ClearAll();
 	}
+
 }
