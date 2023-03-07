@@ -164,7 +164,7 @@ internal static class ArgumentParser
 	/// </summary>
 	/// <remarks>
 	/// See documentation for string format and examples.<br/>
-	/// <see href="https://github.com/Claudiu-IonutCristea/SDET_Team_Task"/>
+	/// <see href="https://github.com/Claudiu-IonutCristea/SDET_Team_Task#sync-interval--i-timeinterval-or--sync-timeinterval"/>
 	/// </remarks>
 	/// <param name="syncPeriod">formatted <see cref="string"/></param>
 	/// <returns>
