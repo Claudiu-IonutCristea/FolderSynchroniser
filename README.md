@@ -52,6 +52,7 @@ h, m and s can only have 1 leading zero! (01h05m is accepted, but 001h will retu
 
 ### Example arguments
 ![image_2023-03-07_024028879](https://user-images.githubusercontent.com/111143114/223289000-145f0425-b1ed-4b6b-8ff1-b0dd38bfe9b1.png)  
+![image_2023-03-07_032506827](https://user-images.githubusercontent.com/111143114/223295150-a9823b59-39c1-4e98-863d-e670399e9a10.png)
 <br/><br/>
 
 ## Errors
